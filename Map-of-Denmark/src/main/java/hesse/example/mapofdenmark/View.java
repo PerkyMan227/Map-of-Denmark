@@ -1,5 +1,12 @@
 package hesse.example.mapofdenmark;
 
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
@@ -11,8 +18,10 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 public class View {
-    Canvas canvas = new Canvas(640, 480);
+    Canvas canvas = new Canvas(1360, 720);
     GraphicsContext gc = canvas.getGraphicsContext2D();
     double x1 = 100;
     double y1 = 100;
@@ -21,18 +30,25 @@ public class View {
 
     Affine trans = new Affine();
 
+    //Box hvor du kan sætte noget på
+    protected Pane overlayPane;
+
     Model model;
     public View(Model model, Stage stage) {
 
         this.model = model;
         stage.setTitle("Draw Lines");
-        BorderPane pane = new BorderPane(canvas);
-        Scene scene = new Scene(pane);
+        overlayPane = new Pane(canvas);
+        Scene scene = new Scene(overlayPane);
         stage.setScene(scene);
         stage.show();
         redraw();
         pan(-0.56*model.minlon, model.maxlat);
         zoom(0, 0, canvas.getHeight() / (model.maxlat - model.minlat));
+
+    }
+    public void addOverlayControl(javafx.scene.Node... control) {
+        overlayPane.getChildren().addAll(control);
     }
     void redraw() {
         gc.setTransform(new Affine());

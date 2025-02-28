@@ -3,6 +3,7 @@ package hesse.example.mapofdenmark;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import javax.xml.stream.XMLStreamException;
@@ -11,10 +12,32 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException, XMLStreamException, ClassNotFoundException {
+
         String filename = "data/small.osm";
         var model = Model.load(filename);
         var view = new View(model, stage);
+
+        //Ting der skal være i vores stage
+
+        Button testButton = new Button("Test knap");
+        testButton.setLayoutX(20);
+        testButton.setLayoutY(20);
+
+
+
+        Button testButton2 = new Button("Test knap 2");
+        testButton2.setLayoutX(100);
+        testButton2.setLayoutY(20);
+
+        view.addOverlayControl(testButton, testButton2);
+
+
+
+
+
         new Controller(model, view);
+
+
     }
 
     public static void main(String[] args) {
