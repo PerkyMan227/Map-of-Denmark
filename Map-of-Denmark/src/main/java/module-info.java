@@ -1,7 +1,7 @@
 module hesse.example.mapofdenmark {
     requires javafx.controls;
     requires javafx.fxml;
-    requires java.xml;
+    requires java.desktop;
 
 
     opens hesse.example.mapofdenmark to javafx.fxml;

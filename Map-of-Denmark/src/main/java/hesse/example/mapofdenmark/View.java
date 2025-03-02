@@ -47,6 +47,7 @@ public class View {
         zoom(0, 0, canvas.getHeight() / (model.maxlat - model.minlat));
 
     }
+    //Metode til at sætte vores knapper ind i views pane/layout
     public void addOverlayControl(javafx.scene.Node... control) {
         overlayPane.getChildren().addAll(control);
     }

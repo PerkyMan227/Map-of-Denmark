@@ -19,6 +19,7 @@ public class HelloApplication extends Application {
 
         //Ting der skal være i vores stage
 
+        //Opretter en Button som tildeles et navn og placering på vores plane
         Button testButton = new Button("Test knap");
         testButton.setLayoutX(20);
         testButton.setLayoutY(20);
@@ -29,11 +30,17 @@ public class HelloApplication extends Application {
         testButton2.setLayoutX(100);
         testButton2.setLayoutY(20);
 
+        //Sætter vores buttons ind i View
         view.addOverlayControl(testButton, testButton2);
 
 
+        //Implementation af knapper:
 
+        //Setup af controller for knapperne
+        ButtonController buttonController = new ButtonController(model, view);
 
+        //Linker testbutton til ButtonController methods
+        testButton.setOnAction(event -> buttonController.handleButtonAction());
 
         new Controller(model, view);
 
