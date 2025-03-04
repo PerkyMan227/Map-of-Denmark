@@ -20,10 +20,6 @@ public class ButtonController {
     }
 
     //Metode som kan kaldes på en knap
-    @FXML
-    public void handleButtonAction() {
-        System.out.println("testButton clicked");
-    }
 
     @FXML
     public void DarkmodeFunction(){
@@ -42,11 +38,6 @@ public class ButtonController {
         System.out.println("Darkmode function called" + isDarkMode);
 
 
-
-    }
-
-    @FXML
-    public void TestButtonClick() {
 
     }
 }

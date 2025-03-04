@@ -32,20 +32,17 @@ public class UIComponents {
         Button settingsButton = settingsButton();
 
         Text zoomLevel = CreateZoomLevel();
-
-        Button testButton = CreateTestButton();
-
+        
         Rectangle adressHoverBox = CreateAdressHoverBox();
 
 
-        view.addOverlayControl(bottomBox, box, settingsButton, zoomLevel, testButton, adressHoverBox);
-
+        view.addOverlayControl(bottomBox, box, settingsButton, zoomLevel, adressHoverBox);
 
     }
 
     private Rectangle CreateBottomBox() {
         Rectangle bottomBox = new Rectangle(1360,26.5);
-        AnchorPane.setBottomAnchor(bottomBox, 0.0);
+        AnchorPane.setBottomAnchor(bottomBox, -1.0);
         AnchorPane.setLeftAnchor(bottomBox, 0.0);
         AnchorPane.setRightAnchor(bottomBox, 0.0);
         bottomBox.fillProperty().bind(boxColor);
@@ -89,7 +86,6 @@ public class UIComponents {
         view.zoomLevelProperty().addListener((observable, oldValue, newValue) -> {
             Platform.runLater(()-> {
                 zoomLevel.setText(String.format("Current Zoom: %.2f", newValue.doubleValue()));
-                System.out.println("Text updated to: " + zoomLevel.getText());
             });
         });
 
@@ -103,16 +99,6 @@ public class UIComponents {
 
         return zoomLevel;
 
-    }
-    private Button CreateTestButton() {
-        Button testButton = new Button("Directions");
-        testButton.setMinSize(110, 20);
-        AnchorPane.setTopAnchor(testButton, 0.0);
-        AnchorPane.setLeftAnchor(testButton, 0.0);
-
-        testButton.setOnAction(event -> buttonController.TestButtonClick());
-
-        return testButton;
     }
 
     private Rectangle CreateAdressHoverBox() {

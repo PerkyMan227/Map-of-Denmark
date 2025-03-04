@@ -24,6 +24,8 @@ public class View {
 
     Affine trans = new Affine();
 
+    private Color currentBackgroundColor = Color.WHITE;
+
     //Box hvor du kan sætte noget på
     protected AnchorPane overlayPane;
 
@@ -55,7 +57,7 @@ public class View {
         zoom(0, 0, canvas.getHeight() / (model.maxlat - model.minlat));
 
     }
-    private Color currentBackgroundColor = Color.WHITE;
+
 
     //Metode til at sætte vores knapper ind i views pane/layout
     public void addOverlayControl(Node... control) {
@@ -93,7 +95,6 @@ public class View {
         trans.prependScale(factor, factor);
 
         setZoomlevel(zoomlevel * factor);
-        System.out.println("Zoom method called - factor: " + factor + ", new zoom level: " + getZoomlevel());
 
         pan(dx, dy);
         redraw();
@@ -116,15 +117,16 @@ public class View {
     public void setZoomlevel(double zoom) {
         this.zoomlevel = zoom;
         this.zoomLevelProperty.setValue(zoom);
-        System.out.println("Zoomlevel is set to : " + zoom);
+
 
         // Ensure the property is updated
         Platform.runLater(() -> {
             this.zoomLevelProperty.setValue(zoom);
-            System.out.println("Zoom level property updated: " + zoom);
+
         });
     }
     public DoubleProperty zoomLevelProperty() {
         return this.zoomLevelProperty;
     }
 }
+

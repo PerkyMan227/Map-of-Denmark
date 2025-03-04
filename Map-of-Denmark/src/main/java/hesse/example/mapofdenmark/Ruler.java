@@ -2,41 +2,73 @@ package hesse.example.mapofdenmark;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.transform.Affine;
 
 public class Ruler extends Canvas {
     private double width;
     private double height;
     private double zoomLevel;
-    private Canvas rulerCanvas;
+    Canvas rulerCanvas;
+    GraphicsContext gc = getGraphicsContext2D();
+    Affine affine = new Affine();
 
     public Ruler(double width, double height, double zoomLevel) {
-        this.width = width;
-        this.height = height;
+        super(width, height);
         this.zoomLevel = zoomLevel;
         rulerCanvas = new Canvas(width, height);
-        drawRuler();
+        setVisible(true);
+        reDraw();
+
+        System.out.println("Ruler Width: " + getWidth());
+        System.out.println("Ruler Height: " + getHeight());
+        System.out.println("Initial Zoom Level: " + zoomLevel);
     }
-    public void drawRuler() {
-        GraphicsContext gc = rulerCanvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, rulerCanvas.getWidth(), rulerCanvas.getHeight());
+    public void reDraw() {
+        GraphicsContext gc = getGraphicsContext2D();
 
-        double rulerSegmentLength = 100 / zoomLevel;
 
-        for (double x = 0; x <= width; x += rulerSegmentLength) {
+        gc.clearRect(0, 0, getWidth(), getHeight());
+
+        gc.setStroke(Color.BLUE);
+        gc.setFill(Color.BLUE);
+        gc.setLineWidth(1);
+
+        int maxSegments = 20;
+        double baseSegmentMeters = calculateBaseSegmentLength();
+        double pixelsPerSegment = calculatePixelsPerSegment(baseSegmentMeters);
+
+        for (double i = 0; i <= maxSegments; i += pixelsPerSegment) {
+            double x = i * pixelsPerSegment;
+            if (x > getWidth()) break;
+
             gc.strokeLine(x, 0, x, 10); // Draw the tick marks
-            gc.fillText(String.format("%.1f", x * zoomLevel / 100), x, 20); // Draw the labels
+
+            // Use integer meters for cleaner labels
+            double distanceLabel = i * baseSegmentMeters;
+            gc.fillText(String.format("%d m", (int)distanceLabel), x, 20);
         }
+        System.out.println("Ruler redrawn - Width: " + getWidth() + ", Height: " + getHeight() +", Segment Length: " + pixelsPerSegment);
 
     }
-    private Canvas createRuler() {
-        drawRuler();
-        return rulerCanvas;
+
+    private double calculatePixelsPerSegment(double baseSegmentMeters) {
+        return (baseSegmentMeters * getWidth()) / (getWidth() * zoomLevel / 100);
     }
-    public void setZoomLevel(double zoomLevel) {
-        this.zoomLevel = zoomLevel;
-        drawRuler();
+
+    private double calculateBaseSegmentLength() {
+        return 1000 / zoomLevel;
     }
-    public Canvas getRulerCanvas() {
-        return createRuler();
+
+    public void setZoomLevel(Double zoom) {
+        this.zoomLevel = zoom;
+    }
+    private double calculateSegmentLength() {
+        // Adjust this method to create meaningful segments based on zoom level
+        // For example, create segments that are meaningful at different zoom levels
+        double baseSegmentSize = 50; // Base segment size in pixels
+        double zoomFactor = 100 / zoomLevel; // Adjust based on your zoom scale
+
+        return Math.max(20, Math.min(100, baseSegmentSize * zoomFactor));
     }
 }
