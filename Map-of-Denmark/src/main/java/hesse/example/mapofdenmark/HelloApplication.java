@@ -11,7 +11,7 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException, XMLStreamException, ClassNotFoundException {
-        String filename = "data/small.osm";
+        String filename = "data/map3.osm.zip";
         var model = Model.load(filename);
         var view = new View(model, stage);
         new Controller(model, view);

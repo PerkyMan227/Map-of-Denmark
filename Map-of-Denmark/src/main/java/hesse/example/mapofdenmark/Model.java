@@ -10,10 +10,9 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import javax.xml.stream.FactoryConfigurationError;
@@ -55,9 +54,34 @@ public class Model implements Serializable{
     }
 
     private void parseZIP(String filename) throws IOException, XMLStreamException, FactoryConfigurationError {
-        var input = new ZipInputStream(new FileInputStream(filename));
+        ZipFile zipFile = new ZipFile(filename);
+        Enumeration<? extends ZipEntry> entries = zipFile.entries();
+
+        while (entries.hasMoreElements()) {
+            ZipEntry entry = entries.nextElement();
+            try (InputStream input = zipFile.getInputStream(entry)) {
+                parseOSM(input);
+            }
+
+        }
+
+        zipFile.close(); // Ensure ZIP file is closed after processing
+
+
+        /*for(int i = 0; i < 10; i++){
+           var input = new ZipInputStream(new FileInputStream(filename));
+           //System.out.println(input.available());
+           //input.getNextEntry();
+           //input.skip(i);
+           for (int j = 0; j <= i; j++){
+               input.getNextEntry();
+
+           }
+           parseOSM(input);
+        }
+        /*var input = new ZipInputStream(new FileInputStream(filename));
         input.getNextEntry();
-        parseOSM(input);
+        parseOSM(input);*/
     }
 
     private void parseOSM(String filename) throws FileNotFoundException, XMLStreamException, FactoryConfigurationError {
@@ -69,41 +93,41 @@ public class Model implements Serializable{
         var id2node = new HashMap<Long, Node>();
         var way = new ArrayList<Node>();
         var coast = false;
-        while (input.hasNext()) {
-            var tagKind = input.next();
-            if (tagKind == XMLStreamConstants.START_ELEMENT) {
-                var name = input.getLocalName();
-                if (name == "bounds") {
-                    minlat = Double.parseDouble(input.getAttributeValue(null, "minlat"));
-                    maxlat = Double.parseDouble(input.getAttributeValue(null, "maxlat"));
-                    minlon = Double.parseDouble(input.getAttributeValue(null, "minlon"));
-                    maxlon = Double.parseDouble(input.getAttributeValue(null, "maxlon"));
-                } else if (name == "node") {
-                    var id = Long.parseLong(input.getAttributeValue(null, "id"));
-                    var lat = Double.parseDouble(input.getAttributeValue(null, "lat"));
-                    var lon = Double.parseDouble(input.getAttributeValue(null, "lon"));
-                    id2node.put(id, new Node(lat, lon));
-                } else if (name == "way") {
-                    way.clear();
-                    coast = false;
-                } else if (name == "tag") {
-                    var v = input.getAttributeValue(null, "v");
-                    if (v.equals("coastline")) {
-                        coast = true;
+            while (input.hasNext()) {
+                var tagKind = input.next();
+                if (tagKind == XMLStreamConstants.START_ELEMENT) {
+                    var name = input.getLocalName();
+                    if (name == "bounds") {
+                        minlat = Double.parseDouble(input.getAttributeValue(null, "minlat"));
+                        maxlat = Double.parseDouble(input.getAttributeValue(null, "maxlat"));
+                        minlon = Double.parseDouble(input.getAttributeValue(null, "minlon"));
+                        maxlon = Double.parseDouble(input.getAttributeValue(null, "maxlon"));
+                    } else if (name == "node") {
+                        var id = Long.parseLong(input.getAttributeValue(null, "id"));
+                        var lat = Double.parseDouble(input.getAttributeValue(null, "lat"));
+                        var lon = Double.parseDouble(input.getAttributeValue(null, "lon"));
+                        id2node.put(id, new Node(lat, lon));
+                    } else if (name == "way") {
+                        way.clear();
+                        coast = false;
+                    } else if (name == "tag") {
+                        var v = input.getAttributeValue(null, "v");
+                        if (v.equals("coastline")) {
+                            coast = true;
+                        }
+                    } else if (name == "nd") {
+                        var ref = Long.parseLong(input.getAttributeValue(null, "ref"));
+                        var node = id2node.get(ref);
+                        way.add(node);
                     }
-                } else if (name == "nd") {
-                    var ref = Long.parseLong(input.getAttributeValue(null, "ref"));
-                    var node = id2node.get(ref);
-                    way.add(node);
-                }
-            } else if (tagKind == XMLStreamConstants.END_ELEMENT) {
-                var name = input.getLocalName();
-                // If you wish to only draw coastline -- if (name == "way" && coast) {
-                if (name == "way") {
-                    ways.add(new Way(way));
+                } else if (tagKind == XMLStreamConstants.END_ELEMENT) {
+                    var name = input.getLocalName();
+                    // If you wish to only draw coastline -- if (name == "way" && coast) {
+                    if (name == "way") {
+                        ways.add(new Way(way));
+                    }
                 }
             }
-        }
     }
         private void parseTXT(String filename) throws FileNotFoundException {
             File f = new File(filename);
