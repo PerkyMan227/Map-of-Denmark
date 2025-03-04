@@ -15,6 +15,7 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class View {
@@ -69,8 +70,37 @@ public class View {
         for (Line line : model.list) {
             line.draw(gc);
         }
-        for (Way way : model.ways) {
-            way.draw(gc);
+       /* for (Way way : model.wayCycleway) {
+            //gc.setStroke(Color.BLUE);
+            way.draw(gc, Color.BLUE);
+            //System.out.println("blue");
+        }
+        for (Way way : model.wayFootway) {
+            // gc.setStroke(Color.RED);
+            way.draw(gc, Color.RED);
+            //System.out.println("red");
+
+        }
+        for (Way way : model.wayResidential) {
+            //gc.setStroke(Color.GREEN);
+            way.draw(gc, Color.GREEN);
+            //System.out.println("green");
+        }*/
+
+        for (Way way : model.wayCoast) {
+            List<ArrayList<Long>> list = model.coastlineNodesAll;
+            //way.drawFill(gc, Color.LIGHTBLUE, list);
+            way.draw(gc,Color.BLUE);
+            //System.out.println("lightblue");
+        }
+        for (Way way : model.wayMotorway) {
+            way.draw(gc,Color.RED);
+        }
+        for (Way way : model.wayTrunk){
+            way.draw(gc,Color.YELLOW);
+        }
+        for (Way way : model.waySecondary){
+            way.draw(gc,Color.GREEN);
         }
     }
 

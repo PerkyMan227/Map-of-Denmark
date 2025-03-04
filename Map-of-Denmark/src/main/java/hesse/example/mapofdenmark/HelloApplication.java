@@ -4,18 +4,21 @@ import javafx.application.Application;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javafx.scene.*;
 import java.io.IOException;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
+import org.xml.sax.SAXException;
 
 public class HelloApplication extends Application {
     @Override
-    public void start(Stage stage) throws IOException, XMLStreamException, ClassNotFoundException {
+    public void start(Stage stage) throws IOException, XMLStreamException, ClassNotFoundException, ParserConfigurationException, SAXException {
 
 
-        String filename = "data/small.osm";
+        String filename = "data/denmark-latest.osm";
         var model = Model.load(filename);
         var view = new View(model, stage);
 
