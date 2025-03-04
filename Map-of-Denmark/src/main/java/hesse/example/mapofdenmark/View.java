@@ -1,9 +1,9 @@
 package hesse.example.mapofdenmark;
 
-import javafx.fxml.FXML;
+import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.geometry.Point2D;
@@ -13,9 +13,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
-import javafx.stage.Stage;
-
-import java.util.List;
 
 public class View {
     Canvas canvas = new Canvas(1360, 720);
@@ -32,10 +29,12 @@ public class View {
 
     //Zoom niveau
     private double zoomlevel = 1.0;
+    private DoubleProperty zoomLevelProperty = new SimpleDoubleProperty(zoomlevel);
 
     Model model;
     public View(Model model, Stage stage) {
         this.model = model;
+        this.zoomLevelProperty = new SimpleDoubleProperty(this.zoomlevel);
         stage.setTitle("Draw Lines");
 
 
@@ -56,13 +55,15 @@ public class View {
         zoom(0, 0, canvas.getHeight() / (model.maxlat - model.minlat));
 
     }
+    private Color currentBackgroundColor = Color.WHITE;
+
     //Metode til at sætte vores knapper ind i views pane/layout
     public void addOverlayControl(Node... control) {
         overlayPane.getChildren().addAll(control);
     }
     void redraw() {
         gc.setTransform(new Affine());
-        gc.setFill(Color.WHITE);
+        gc.setFill(currentBackgroundColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setTransform(trans);
         gc.setLineWidth(1/Math.sqrt(trans.determinant()));
@@ -74,6 +75,13 @@ public class View {
         }
     }
 
+    public void setBackgroundColor(Color color) {
+        this.currentBackgroundColor = color;
+        redraw();
+        System.out.println("Background changed");
+
+    }
+
     void pan(double dx, double dy) {
         trans.prependTranslation(dx, dy);
         redraw();
@@ -83,9 +91,13 @@ public class View {
     void zoom(double dx, double dy, double factor) {
         pan(-dx, -dy);
         trans.prependScale(factor, factor);
-        zoomlevel *= factor;
+
+        setZoomlevel(zoomlevel * factor);
+        System.out.println("Zoom method called - factor: " + factor + ", new zoom level: " + getZoomlevel());
+
         pan(dx, dy);
         redraw();
+
     }
 
     public Point2D mousetoModel(double lastX, double lastY) {
@@ -98,10 +110,21 @@ public class View {
 
     }
     public double getZoomlevel() {
-        return zoomlevel;
+        return this.zoomlevel;
     }
 
-    public void setZoomlevel(double zoomlevel) {
-        this.zoomlevel = zoomlevel;
+    public void setZoomlevel(double zoom) {
+        this.zoomlevel = zoom;
+        this.zoomLevelProperty.setValue(zoom);
+        System.out.println("Zoomlevel is set to : " + zoom);
+
+        // Ensure the property is updated
+        Platform.runLater(() -> {
+            this.zoomLevelProperty.setValue(zoom);
+            System.out.println("Zoom level property updated: " + zoom);
+        });
+    }
+    public DoubleProperty zoomLevelProperty() {
+        return this.zoomLevelProperty;
     }
 }

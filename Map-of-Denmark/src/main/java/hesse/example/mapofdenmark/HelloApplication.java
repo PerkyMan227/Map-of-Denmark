@@ -19,43 +19,8 @@ public class HelloApplication extends Application {
         var model = Model.load(filename);
         var view = new View(model, stage);
 
-        //Ting der skal være i vores stage
-
-
-        //Box
-        Rectangle box = new Rectangle(250, 600);
-        box.setFill(Color.WHITE);
-        box.setStroke(Color.DARKGRAY);
-        AnchorPane.setLeftAnchor(box, 0d);
-        AnchorPane.setTopAnchor(box, 0d);
-
-        //Bund box
-        Rectangle bottomBox = new Rectangle(1360,20);
-        AnchorPane.setBottomAnchor(bottomBox, 0.0);
-        AnchorPane.setLeftAnchor(bottomBox, 0.0);
-        AnchorPane.setRightAnchor(bottomBox, 0.0);
-        bottomBox.setFill(Color.WHITE);
-        bottomBox.setStroke(Color.DARKGRAY);
-
-
-
-
-        /*Directions knappen
-        Button directionsButton = new Button("Directions");
-        directionsButton.setMinSize(110, 20);
-        AnchorPane.setTopAnchor(directionsButton, 0.0);
-        AnchorPane.setLeftAnchor(directionsButton, 0.0);
-
-        //Find knappen
-        Button findButton = new Button("Find");
-        findButton.setMinSize(110, 20);
-        AnchorPane.setTopAnchor(findButton, 0.0);
-        AnchorPane.setLeftAnchor(findButton, 0.0);
-
-         */
-
-
-        view.addOverlayControl(box, bottomBox);
+        UIComponents UI = new UIComponents(view, model);
+        UI.CreatedAndAddOverlayComponents();
 
 
         new Controller(model, view);

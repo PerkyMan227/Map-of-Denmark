@@ -1,23 +1,22 @@
 package hesse.example.mapofdenmark;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.shape.SVGPath;
+import javafx.scene.paint.Color;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.sql.SQLOutput;
+
 
 public class ButtonController {
     private final Model model;
     private final View view;
+    private final UIComponents uiComponents;
+    private boolean isDarkMode = false;
 
-    public ButtonController(Model model, View view) {
+
+    public ButtonController(Model model, View view, UIComponents uiComponents) {
         this.model = model;
         this.view = view;
+        this.uiComponents = uiComponents;
     }
 
     //Metode som kan kaldes på en knap
@@ -25,17 +24,29 @@ public class ButtonController {
     public void handleButtonAction() {
         System.out.println("testButton clicked");
     }
-    /*
-    public Button settingsButton() {
-        Image svgDarkmode = new Image("resources/hesse/example/mapofdenmark/svgIcons/Dark-Theme-Icon.svg");
-        ImageView imageView = new ImageView(svgDarkmode);
-        imageView.setFitWidth(20); //Resize icon
-        imageView.setFitHeight(20);
 
-        // creates a button with svg image
-        Button svgButton = new Button("", imageView);
-        svgButton.setStyle("-fx-background-color: transparent; -fx-padding: 2;");
-        //svgButton.setOnAction(e -> "noget action halløj"));
-        return svgButton;
-    }*/
+    @FXML
+    public void DarkmodeFunction(){
+
+        if (isDarkMode) {
+            view.setBackgroundColor(Color.WHITE);
+            uiComponents.setUIBackgroundColor(Color.WHITE, Color.BLACK);
+            isDarkMode = false;
+        }
+        else {
+            view.setBackgroundColor(Color.LIGHTGRAY);
+            uiComponents.setUIBackgroundColor(Color.LIGHTGRAY, Color.WHITE);
+            isDarkMode = true;
+        }
+
+        System.out.println("Darkmode function called" + isDarkMode);
+
+
+
+    }
+
+    @FXML
+    public void TestButtonClick() {
+
+    }
 }

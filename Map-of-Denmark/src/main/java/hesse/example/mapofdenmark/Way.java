@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 public class Way implements Serializable{
+    //Vejnavn:
+    private String name;
+
+
     double[] coords;
     public Way(ArrayList<Node> way) {
         coords = new double[way.size() * 2];
@@ -21,5 +25,11 @@ public class Way implements Serializable{
             gc.lineTo(coords[i], coords[i+1]);
         }
         gc.stroke();
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 }
