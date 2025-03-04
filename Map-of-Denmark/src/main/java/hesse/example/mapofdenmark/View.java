@@ -4,15 +4,12 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
@@ -31,15 +28,27 @@ public class View {
     Affine trans = new Affine();
 
     //Box hvor du kan sætte noget på
-    protected Pane overlayPane;
+    protected AnchorPane overlayPane;
+
+    //Zoom niveau
+    private double zoomlevel = 1.0;
 
     Model model;
     public View(Model model, Stage stage) {
-
         this.model = model;
         stage.setTitle("Draw Lines");
-        overlayPane = new Pane(canvas);
-        Scene scene = new Scene(overlayPane);
+
+
+        Pane canvasPane = new Pane(canvas);
+
+        overlayPane = new AnchorPane();
+        overlayPane.setPickOnBounds(false);
+
+        StackPane root = new StackPane(canvasPane, overlayPane);
+
+        Scene scene = new Scene(root);
+
+
         stage.setScene(scene);
         stage.show();
         redraw();
@@ -48,7 +57,7 @@ public class View {
 
     }
     //Metode til at sætte vores knapper ind i views pane/layout
-    public void addOverlayControl(javafx.scene.Node... control) {
+    public void addOverlayControl(Node... control) {
         overlayPane.getChildren().addAll(control);
     }
     void redraw() {
@@ -68,11 +77,13 @@ public class View {
     void pan(double dx, double dy) {
         trans.prependTranslation(dx, dy);
         redraw();
+
     }
 
     void zoom(double dx, double dy, double factor) {
         pan(-dx, -dy);
         trans.prependScale(factor, factor);
+        zoomlevel *= factor;
         pan(dx, dy);
         redraw();
     }
@@ -85,5 +96,12 @@ public class View {
             throw new RuntimeException(e);
         }
 
+    }
+    public double getZoomlevel() {
+        return zoomlevel;
+    }
+
+    public void setZoomlevel(double zoomlevel) {
+        this.zoomlevel = zoomlevel;
     }
 }

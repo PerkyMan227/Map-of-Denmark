@@ -1,17 +1,19 @@
 package hesse.example.mapofdenmark;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
 import javax.xml.stream.XMLStreamException;
+import javafx.scene.*;
 import java.io.IOException;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.paint.Color;
 
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException, XMLStreamException, ClassNotFoundException {
+
 
         String filename = "data/small.osm";
         var model = Model.load(filename);
@@ -19,30 +21,57 @@ public class HelloApplication extends Application {
 
         //Ting der skal være i vores stage
 
-        //Opretter en Button som tildeles et navn og placering på vores plane
-        Button testButton = new Button("Test knap");
-        testButton.setLayoutX(20);
-        testButton.setLayoutY(20);
+
+        //Box
+        Rectangle box = new Rectangle(250, 600);
+        box.setFill(Color.WHITE);
+        box.setStroke(Color.DARKGRAY);
+        AnchorPane.setLeftAnchor(box, 0d);
+        AnchorPane.setTopAnchor(box, 0d);
+
+        //Bund box
+        Rectangle bottomBox = new Rectangle(1360,20);
+        AnchorPane.setBottomAnchor(bottomBox, 0.0);
+        AnchorPane.setLeftAnchor(bottomBox, 0.0);
+        AnchorPane.setRightAnchor(bottomBox, 0.0);
+        bottomBox.setFill(Color.WHITE);
+        bottomBox.setStroke(Color.DARKGRAY);
 
 
 
-        Button testButton2 = new Button("Test knap 2");
-        testButton2.setLayoutX(100);
-        testButton2.setLayoutY(20);
 
-        //Sætter vores buttons ind i View
-        view.addOverlayControl(testButton, testButton2);
+        /*Directions knappen
+        Button directionsButton = new Button("Directions");
+        directionsButton.setMinSize(110, 20);
+        AnchorPane.setTopAnchor(directionsButton, 0.0);
+        AnchorPane.setLeftAnchor(directionsButton, 0.0);
+
+        //Find knappen
+        Button findButton = new Button("Find");
+        findButton.setMinSize(110, 20);
+        AnchorPane.setTopAnchor(findButton, 0.0);
+        AnchorPane.setLeftAnchor(findButton, 0.0);
+
+         */
 
 
-        //Implementation af knapper:
+        view.addOverlayControl(box, bottomBox);
+
+
+        new Controller(model, view);
+
+
+
+        /*Implementation af knapper:
 
         //Setup af controller for knapperne
         ButtonController buttonController = new ButtonController(model, view);
 
         //Linker testbutton til ButtonController methods
         testButton.setOnAction(event -> buttonController.handleButtonAction());
+         */
 
-        new Controller(model, view);
+
 
 
     }
