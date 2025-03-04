@@ -18,7 +18,7 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException, XMLStreamException, ClassNotFoundException, ParserConfigurationException, SAXException {
 
 
-        String filename = "data/denmark-latest.osm";
+        String filename = "data/small.osm";
         var model = Model.load(filename);
         var view = new View(model, stage);
 

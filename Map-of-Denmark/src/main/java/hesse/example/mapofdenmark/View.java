@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class View {
-    Canvas canvas = new Canvas(1360, 720);
+    Canvas canvas = new Canvas(690, 420);
     GraphicsContext gc = canvas.getGraphicsContext2D();
     double x1 = 100;
     double y1 = 100;
@@ -70,6 +70,21 @@ public class View {
         for (Line line : model.list) {
             line.draw(gc);
         }
+
+        if (zoomlevel > 25000) {
+            for (Way way : model.wayResidential) {
+                //gc.setStroke(Color.GREEN);
+                way.draw(gc, Color.BLACK);
+                //System.out.println("green");
+            }
+            for (Way way : model.wayCycleway) {
+                //gc.setStroke(Color.BLUE);
+                way.draw(gc, Color.PINK);
+                //System.out.println("blue");
+            }
+        }
+
+
        /* for (Way way : model.wayCycleway) {
             //gc.setStroke(Color.BLUE);
             way.draw(gc, Color.BLUE);
@@ -115,6 +130,7 @@ public class View {
         trans.prependScale(factor, factor);
         zoomlevel *= factor;
         pan(dx, dy);
+        System.out.println(zoomlevel);
         redraw();
     }
 
