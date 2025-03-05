@@ -85,13 +85,12 @@ public class UIComponents {
         Text zoomLevel = new Text();
         view.zoomLevelProperty().addListener((observable, oldValue, newValue) -> {
             Platform.runLater(()-> {
-                zoomLevel.setText(String.format("Current Zoom: %.2f", newValue.doubleValue()));
+                double zoomPercentage = (newValue.doubleValue() / view.getInitialZoom()) * 10.0;
+                zoomLevel.setText(String.format("Current Zoom: %.2f%%", zoomPercentage));
             });
         });
 
-        //TODO: Omregn zoomlevel til %
-
-        zoomLevel.setText(String.format("Current Zoom: %.2f", view.getZoomlevel()));
+        zoomLevel.setText(String.format("Current Zoom: %.2f%%", view.getZoomlevel()));
         zoomLevel.setStyle("-fx-font-size: 14px; -fx-fill: black;");
 
         AnchorPane.setRightAnchor(zoomLevel, 50.0);

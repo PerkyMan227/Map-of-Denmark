@@ -30,6 +30,7 @@ public class View {
     protected AnchorPane overlayPane;
 
     //Zoom niveau
+    private double initialZoom = 0;
     private double zoomlevel = 1.0;
     private DoubleProperty zoomLevelProperty = new SimpleDoubleProperty(zoomlevel);
 
@@ -91,11 +92,12 @@ public class View {
     }
 
     void zoom(double dx, double dy, double factor) {
+        if (initialZoom == 0) {
+            initialZoom = factor;
+        }
         pan(-dx, -dy);
         trans.prependScale(factor, factor);
-
         setZoomlevel(zoomlevel * factor);
-
         pan(dx, dy);
         redraw();
 
@@ -111,7 +113,7 @@ public class View {
 
     }
     public double getZoomlevel() {
-        return this.zoomlevel;
+        return (this.zoomlevel / initialZoom) * 10.0;
     }
 
     public void setZoomlevel(double zoom) {
@@ -127,6 +129,9 @@ public class View {
     }
     public DoubleProperty zoomLevelProperty() {
         return this.zoomLevelProperty;
+    }
+    public double getInitialZoom() {
+        return this.initialZoom;
     }
 }
 
