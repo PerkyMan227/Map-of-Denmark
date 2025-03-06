@@ -15,7 +15,7 @@ public class Way implements Serializable{
         }
     }
 
-    public void draw(GraphicsContext gc, javafx. scene. paint. Paint color) {
+    public void draw(GraphicsContext gc, javafx. scene. paint.Paint color) {
         gc.setStroke(color);
         gc.beginPath();
         gc.moveTo(coords[0], coords[1]);
@@ -23,5 +23,6 @@ public class Way implements Serializable{
             gc.lineTo(coords[i], coords[i+1]);
         }
         gc.stroke();
+        gc.closePath();
     }
 }

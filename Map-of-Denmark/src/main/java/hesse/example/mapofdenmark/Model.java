@@ -37,6 +37,8 @@ public class Model implements Serializable{
     List<Way> wayMotorway = new ArrayList<Way>();
     List<Way> wayTrunk = new ArrayList<>();
     List<Way> waySecondary = new ArrayList<>();
+    List<Way> wayPrimary = new ArrayList<>();
+    List<Way> wayMotorwayLink = new ArrayList<>();
 
     List<Long> coastlineNodes = new ArrayList<>();
     ArrayList<Long> coastlineNodesTemp = new ArrayList<>();
@@ -122,6 +124,9 @@ public class Model implements Serializable{
         var motorway = false;
         var trunk = false;
         var secondary = false;
+        var primary = false;
+        var motorwayLink = false;
+        var wayB = true;
 
         // Remove DOM parsing (DocumentBuilder) and XML document parsing
         // DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -152,6 +157,9 @@ public class Model implements Serializable{
                     motorway = false;
                     trunk = false;
                     secondary = false;
+                    primary = false;
+                    motorwayLink = false;
+                    wayB=false;
                     coastlineNodesTemp.clear();
 
                 } else if (name.equals("tag")) {
@@ -169,6 +177,7 @@ public class Model implements Serializable{
 
                     } else if (k.equals("highway")) {
                         highway = true;
+                        wayB=true;
                         if (v.equals("cycleway")) {
                             cycleway = true;
                             //System.out.println("reachedC");
@@ -182,7 +191,12 @@ public class Model implements Serializable{
                             trunk = true;
                         } else if (v.equals("secondary")) {
                             secondary = true;
+                        } else if (v.equals("primary")) {
+                            primary = true;
+                        } else if (v.equals("motorway_link")) {
+                            motorwayLink = true;
                         }
+
                     }
                 }
                 if (name.equals("nd")) {
@@ -218,6 +232,13 @@ public class Model implements Serializable{
                         wayTrunk.add(new Way(way));
                     } else if (secondary) {
                         waySecondary.add(new Way(way));
+                    } else if (primary) {
+                        wayPrimary.add(new Way(way));
+                    } else if (motorwayLink) {
+                        wayMotorwayLink.add(new Way(way));
+                    }
+                    else{
+                        ways.add(new Way(way));
                     }
                 }
             }
